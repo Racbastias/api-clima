@@ -11,7 +11,7 @@
 
 </head>
     <body>
-        <div class="row" style="background-image: url(https://wallpaperaccess.com/full/239663.jpg)"">
+        <div class="row" style="background-image: url(https://i.pinimg.com/originals/92/80/fd/9280fdfd3bd1761a1493c06bceb5d977.jpg); background-size:auto; background-position: center;">
             <div class="col-3 bg-transparent"></div>
             <div class="col bg-dark text-center p-4" style="opacity: 80%;">
                 <h2 class="text-light">Trip Information</h2>
@@ -24,12 +24,16 @@
                         <button type="submit" class="btn btn-primary" id="button">Send</button>
                 </form>
                 <br><br>
-                <div class="text-start p-2">
-                    <h5 class="text-light">City: <span class="text-light" id="city"></span></h5>
-                    <h5 class="text-light">Weather: <span class="text-light" id="weather"></span></h5>
-                    <h5 class="text-light">Temp: <span class="text-light" id="temp"></span> ºC</h5>
-                    <h5 class="text-light">Latitude: <span class="text-light" id="lat"></span></h5>
-                    <h5 class="text-light">Longitude: <span class="text-light" id="long"></span></h5>
+                <div class="text-center p-4">
+                    <h5 class="text-light"><span class="text-warning" id="city"></span></h5>
+                    <h5 class="text-light"><span class="text-warning" id="weather"></span></h5>
+                    <h5 class="text-light"><span class="text-warning" id="temp"></span></h5>
+                    <h5 class="text-light"><span class="text-warning" id="maxtemp"></span></h5>
+                    <h5 class="text-light"><span class="text-warning" id="mintemp"></span></h5>
+                    <h5 class="text-light"><span class="text-warning" id="lat"></span></h5>
+                    <h5 class="text-light"><span class="text-warning" id="long"></span></h5>
+                    <br>
+                    <h3 class="text-warning py-0" id="message"></h3>
                 </div>
             </div>
             <div class="col-3 bg-transparent"></div>
@@ -44,18 +48,25 @@
                 ev.preventDefault();
                 $('#city, #weather, #temp, #lat, #long').html('');
                 const ciudad = $('#location').val();
-                console.log(ciudad);
                 let information={};
                 let temperature=0;
+                let maxtemp=0;
+                let mintemp=0;
                 $.get('https://api.openweathermap.org/data/2.5/weather?q='+ ciudad +'&appid=60981752ed62643f821921e6bbac7e0e',function(localdata) {
                     information = localdata;
                     console.log(information);
-                    $('#city').append(ciudad);
-                    $('#weather').css('text-transform','capitalize').append(information.weather[0].description);
-                    temperature = (information.main.temp-273.15).toFixed(2)
-                    $('#temp').append(temperature);
-                    $('#lat').append(information.coord.lat);
-                    $('#long').append(information.coord.lon);
+                    $('#city').append('<span class="text-light">City: </span>'+ciudad +', '+ information.sys.country);
+                    $('#weather').css('text-transform','capitalize').append('<span class="text-light">Weather: </span>'+information.weather[0].description);
+                    temperature=(information.main.temp-273.15).toFixed(2);
+                    maxtemp=(information.main.temp_max-273.15).toFixed(2);
+                    mintemp=(information.main.temp_min-273.15).toFixed(2);
+                    $('#temp').append('<span class="text-light">Temp: </span>'+temperature+' ºC');
+                    $('#maxtemp').append('<span class="text-light">Max Temp: </span>'+maxtemp+' ºC');
+                    $('#mintemp').append('<span class="text-light">Min Temp: </span>'+mintemp+' ºC');
+                    $('#lat').append('<span class="text-light">Latitude: </span>'+information.coord.lat);
+                    $('#long').append('<span class="text-light">Longitude: </span>'+information.coord.lon);
+                    $('#message').append('¡¡Take care and have a nice trip!!')
+
 
                 })
             })
