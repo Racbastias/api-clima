@@ -23,7 +23,9 @@
                         </div>
                         <button type="submit" class="btn btn-primary" id="button">Send</button>
                 </form>
-                <br><br>
+                <br>
+                <h6><span class="text-secondary" id="yourlocation"></span></h6>
+
                 <div class="text-center p-4">
                     <h5 class="text-light"><span class="text-warning" id="city"></span></h5>
                     <h5 class="text-light"><span class="text-warning" id="weather"></span></h5>
@@ -46,7 +48,7 @@
             
             $('#formulario').on('submit', function(ev) {
                 ev.preventDefault();
-                $('#city, #weather, #temp, #lat, #long').html('');
+                $('#city, #weather, #temp, #maxtemp, #mintemp, #lat, #long, #message, #yourlocation').html('');
                 const ciudad = $('#location').val();
                 let information={};
                 let temperature=0;
@@ -54,7 +56,7 @@
                 let mintemp=0;
                 $.get('https://api.openweathermap.org/data/2.5/weather?q='+ ciudad +'&appid=60981752ed62643f821921e6bbac7e0e',function(localdata) {
                     information = localdata;
-                    console.log(information);
+                    //console.log(information);
                     $('#city').append('<span class="text-light">City: </span>'+ciudad +', '+ information.sys.country);
                     $('#weather').css('text-transform','capitalize').append('<span class="text-light">Weather: </span>'+information.weather[0].description);
                     temperature=(information.main.temp-273.15).toFixed(2);
@@ -66,15 +68,29 @@
                     $('#lat').append('<span class="text-light">Latitude: </span>'+information.coord.lat);
                     $('#long').append('<span class="text-light">Longitude: </span>'+information.coord.lon);
                     $('#message').append('¡¡Take care and have a nice trip!!')
-
-
                 })
+                let actualinfo ={};
+                let actualcity=0;
+                let actualweather=0;
+                let actualtemp=0;
+                let actuallat=0;
+                let actuallon=0;
+                $.get(navigator.geolocation.getCurrentPosition(function(yourlocation) {
+                    actualinfo = yourlocation;
+                    console.log(actualinfo);
+                    actuallat = yourlocation.coords.latitude;
+                    actuallon = yourlocation.coords.longitude;
+                    $.get('https://api.openweathermap.org/data/2.5/weather?lat='+actuallat+'&lon='+actuallon+'&appid=60981752ed62643f821921e6bbac7e0e',function(yourdata){
+                        console.log(yourdata);
+                        actualcity = (yourdata.name);
+                        actualtemp = (yourdata.main.feels_like-273.15).toFixed(2);
+                        actualweather = (yourdata.weather[0].description);
+                        $('#yourlocation').append('You are at '+actualcity+' right now, and your actual temp is '+actualtemp+' ºC, with '+actualweather+' weather conditions.');
+                    })
+                }))
+
             })
-            
-            // codigo para determinar la ubicación actual
-            // navigator.geolocation.getCurrentPosition(function(location){
-            //console.log(location)
-            //})
+
         });
 
 
