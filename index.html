@@ -11,7 +11,7 @@
 
 </head>
     <body>
-        <div class="row" style="background-image: url(https://i.pinimg.com/originals/92/80/fd/9280fdfd3bd1761a1493c06bceb5d977.jpg); background-size:auto; background-position: center;">
+        <div class="row" style="background-image: url(https://wallpaperaccess.com/full/1912567.jpg); background-size:auto; background-position: center;">
             <div class="col-2 bg-transparent"></div>
             <div class="col bg-dark text-center p-4" style="opacity: 80%;">
                 <h2 class="text-light">Trip Information</h2>
@@ -75,6 +75,7 @@
                 let actualtemp=0;
                 let actuallat=0;
                 let actuallon=0;
+                let actualcountry=0;
                 $.get(navigator.geolocation.getCurrentPosition(function(yourlocation) {
                     actualinfo = yourlocation;
                     console.log(actualinfo);
@@ -85,7 +86,8 @@
                         actualcity = (yourdata.name);
                         actualtemp = (yourdata.main.feels_like-273.15).toFixed(2);
                         actualweather = (yourdata.weather[0].description);
-                        $('#yourlocation').append('You are at '+actualcity+' right now, and your actual temp is '+actualtemp+' ºC, with '+actualweather+' weather conditions.');
+                        actualcountry = (yourdata.sys.country);
+                        $('#yourlocation').append('You are nearly at '+actualcity+' ('+actualcountry+') right now, and your actual temp is '+actualtemp+' ºC, with '+actualweather+' weather conditions.');
                     })
                 }))
 
